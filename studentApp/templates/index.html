@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Student Learning Platform</title>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="bg-purple-700 fixed w-full z-20 top-0 left-0">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="#" class="flex items-center">
+                <span class="self-center text-2xl font-semibold text-white">EduLearn</span>
+            </a>
+
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+                <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium md:flex-row md:space-x-8 md:mt-0">
+                    <li><a href="{% url 'student_home' %}" class="block py-2 pl-3 pr-4 text-white hover:text-purple-200">Home</a></li>
+                    <li><a href="#" class="block py-2 pl-3 pr-4 text-white hover:text-purple-200">Courses</a></li>
+                    <li><a href="{% url 'student_register' %}" class="block py-2 pl-3 pr-4 text-white hover:text-purple-200">Register</a></li>
+                    <li><a href="#" class="block py-2 pl-3 pr-4 text-white hover:text-purple-200">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Icons Section -->
+            <div class="flex items-center space-x-6 md:order-2">
+                <!-- My Courses -->
+                <div class="relative group">
+                    <a href="{% url 'mycourse' %}" class="text-white hover:text-purple-200">
+                        <i class="fas fa-book-open text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{order_count}}</span>
+                        <span class="hidden group-hover:block absolute top-full right-0 mt-2 bg-white text-purple-700 text-sm py-1 px-2 rounded shadow-lg whitespace-nowrap">My Courses</span>
+                    </a>
+                </div>
+
+                <!-- Wishlist -->
+                <div class="relative group">
+                    <a href="#" class="text-white hover:text-purple-200">
+                        <i class="fas fa-heart text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">5</span>
+                        <span class="hidden group-hover:block absolute top-full right-0 mt-2 bg-white text-purple-700 text-sm py-1 px-2 rounded shadow-lg whitespace-nowrap">Wishlist</span>
+                    </a>
+                </div>
+
+                <!-- Cart -->
+                <div class="relative group">
+                    <a href="{% url 'cart_list' %}" class="text-white hover:text-purple-200">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{request.user.user_cart.all.count}}</span>
+                        <span class="hidden group-hover:block absolute top-full right-0 mt-2 bg-white text-purple-700 text-sm py-1 px-2 rounded shadow-lg whitespace-nowrap">Cart</span>
+                    </a>
+                </div>
+
+                <button class="text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+{% block content %}
+
+    <!-- Hero Section -->
+    <section class="pt-20 bg-gradient-to-b from-purple-700 to-purple-500">
+        <div class="max-w-screen-xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-8 items-center">
+
+            <div class="text-white">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Transform Your Future with Online Learning</h1>
+                <p class="text-lg mb-8">Access world-class education from anywhere. Start your learning journey today with our expert-led courses.</p>
+
+                <!-- UPDATED LINK HERE -->
+                <a href="#popular-courses">
+                    <button class="bg-white text-purple-700 hover:bg-purple-100 px-6 py-3 rounded-lg font-semibold transition duration-300">
+                        Browse Courses
+                    </button>
+                </a>
+            </div>
+
+            <div class="flex justify-center">
+                <img src="{{ 'course_image/hero.jpg'}}" alt="Students learning" class="rounded-lg shadow-xl w-100 h-80 ">
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Course Cards Section -->
+    <!-- ADDED ID HERE -->
+    <section id="popular-courses" class="max-w-screen-xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Popular Courses</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+
+            {% for course in courses %}
+            <div class="bg-white rounded-xl shadow-lg flex flex-col overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl h-full">
+
+                <!-- Image -->
+                <img src="{{ course.image.url }}" alt="{{ course.title }}" class="w-full h-48 object-fit-cover">
+
+                <div class="flex flex-col justify-between flex-1 p-6">
+                    <div>
+                        <div class="text-purple-600 text-sm font-semibold mb-2">
+                            {% for cat in course.category.all %}
+                            <span>{{ cat }} |</span>
+                            {% endfor %}
+                        </div>
+
+                        <h3 class="text-xl font-bold mb-2">{{ course.title }}</h3>
+                        <p class="text-gray-600 mb-4 line-clamp-3">{{ course.description }}</p>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-auto pt-4 border-t">
+                        <span class="text-purple-700 font-bold">{{ course.price }}</span>
+
+                        {% if course.id in ordered_course %}
+                        <a href="{% url 'mycourse' %}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-300">
+                            View
+                        </a>
+                        {% else %}
+                        <a href="{% url 'course_detail' course.id %}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-300">
+                            Enroll Now
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+    </section>
+
+{% endblock %}
+</body>
+</html>
