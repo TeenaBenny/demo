@@ -25,10 +25,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('instructor/register',instructorView.InstructorView.as_view(),name='instructor_reg'),
-    path('',studentView.StudentView.as_view(),name='student_home'),
+    path('home',studentView.StudentView.as_view(),name='student_home'),
     path('course/detail/<int:id>',studentView.CourseDetail.as_view(),name='course_detail'),
     path('student/register',studentView.StudentRegisterView.as_view(),name="student_register"),
-    path('student/login',studentView.StudentLogin.as_view(),name="student_login"),
+    path('/',studentView.StudentLogin.as_view(),name="student_login"),
     path('add/cart/<int:id>',studentView.AddToCart.as_view(),name="add_to_cart"),
     path('cart/list',studentView.CartSummaryView.as_view(),name="cart_list"),
     path('cart/delete/<int:id>',studentView.CartDelete.as_view(),name="cart_delete"),
